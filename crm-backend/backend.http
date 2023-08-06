@@ -1,0 +1,11 @@
+### Angular page
+GET {{host}}
+Accept: application/html
+
+### Another Angular page
+GET {{host}}/ping/pong
+Accept: application/html
+
+### Test page
+GET {{host}}/rest/test
+Accept: application/json
