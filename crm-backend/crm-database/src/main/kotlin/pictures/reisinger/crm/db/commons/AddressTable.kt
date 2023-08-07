@@ -7,10 +7,8 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import java.util.*
 
 internal object AddressTable : UUIDTable() {
-    val phone = varchar("phone", 50)
-    val email = varchar("email", 150)
     val street = varchar("street", 150)
-    val plz = varchar("plz", 10)
+    val plz = integer("plz")
     val city = varchar("city", 100)
     val country = varchar("country", 100)
 }
@@ -18,8 +16,6 @@ internal object AddressTable : UUIDTable() {
 class Address(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Address>(AddressTable)
 
-    var phone by AddressTable.phone
-    var email by AddressTable.email
     var street by AddressTable.street
     var plz by AddressTable.plz
     var city by AddressTable.city

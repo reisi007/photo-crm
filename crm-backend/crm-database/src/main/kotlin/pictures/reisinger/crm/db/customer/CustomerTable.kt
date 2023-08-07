@@ -8,7 +8,6 @@ import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.SqlExpressionBuilder
 import org.jetbrains.exposed.sql.javatime.date
-import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.select
 import pictures.reisinger.crm.db.commons.Address
 import pictures.reisinger.crm.db.commons.AddressTable
@@ -24,6 +23,8 @@ import java.util.*
 internal object CustomerTable : UUIDTable() {
     val name = varchar("name", 150)
     val birthday = date("birthday")
+    val phone = varchar("phone", 50)
+    val email = varchar("email", 150)
     val address =
         optReference("address", AddressTable, onDelete = ReferenceOption.CASCADE, onUpdate = ReferenceOption.CASCADE)
     val company =
@@ -36,9 +37,10 @@ class Customer(id: EntityID<UUID>) : UUIDEntity(id) {
 
     var name by CustomerTable.name
     var birthday by CustomerTable.birthday
-    var address by Address optionalReferencedOn  CustomerTable.address
+    var address by Address optionalReferencedOn CustomerTable.address
     var company by Company optionalReferencedOn CustomerTable.company
-
+    var phone by CustomerTable.phone
+    var email by CustomerTable.email
     val orders by Order referrersOn OrderTable.customer
 
     val lifetimeValue: BigDecimal

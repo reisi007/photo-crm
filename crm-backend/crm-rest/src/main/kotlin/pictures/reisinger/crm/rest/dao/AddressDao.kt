@@ -6,23 +6,16 @@ import pictures.reisinger.crm.db.insertOrUpdateWithId
 import pictures.reisinger.crm.rest.Id
 
 /**
- * Represents a data class for storing address information.
+ * Represents a data access object for managing address data in a database.
  *
- * @property id The unique identifier for the address.
- * @property phone The phone number associated with the address.
- * @property email The email address associated with the address.
- * @property street The street or house number of the address.
- * @property plz The postal code associated with the address.
- * @property city The city or locality of the address.
- * @property country The country of the address.
+ * This class provides methods to perform CRUD operations (create, read, update, delete)
+ * on address entries stored in the database.
  */
 @Serializable
 data class AddressDao(
     override var id: UUIDAsString?,
-    var phone: String,
-    var email: String,
     var street: String,
-    var plz: String,
+    var plz: Int,
     var city: String,
     var country: String
 ) : Id<UUIDAsString?>
@@ -34,8 +27,6 @@ data class AddressDao(
  */
 fun Address.toDao() = AddressDao(
     id.value,
-    phone,
-    email,
     street,
     plz,
     city,
@@ -48,8 +39,7 @@ fun Address.toDao() = AddressDao(
  * @return The converted [Address] object.
  */
 fun AddressDao.toEntity(id: UUIDAsString) = Address.insertOrUpdateWithId(id) {
-    it.phone = phone
-    it.email = email
+
     it.street = street
     it.plz = plz
     it.city = city

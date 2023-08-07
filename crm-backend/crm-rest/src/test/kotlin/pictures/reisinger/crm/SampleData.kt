@@ -15,10 +15,8 @@ fun sampleCompany(uuid: String = "816e8400-f29f-11d4-a316-446655140000"): Compan
 
 private fun sampleAddress(uuid: String) = AddressDao(
     id = UUID.fromString(uuid),
-    phone = "0123456789",
-    email = "test@example.com",
     street = "1 Network Drive",
-    plz = "12345",
+    plz = 12345,
     city = "Testville",
     country = "Testland"
 )
@@ -28,6 +26,8 @@ fun sampleCustomerWithOrder(): Pair<CustomerUpdateDao, OrderDao> {
     val customerUpdateDao = CustomerUpdateDao(
         id = customerId,
         name = "John Doe",
+        phone = "0123456789",
+        email = "test@example.com",
         birthday = LocalDate.of(1995, 5, 23),
     )
 

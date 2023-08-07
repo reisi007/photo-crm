@@ -40,8 +40,7 @@
       ],
       "extends": [
         "plugin:@angular-eslint/template/recommended",
-        "plugin:@angular-eslint/template/accessibility",
-        "plugin:tailwindcss/recommended"
+        "plugin:@angular-eslint/template/accessibility"
       ],
       "rules": {}
     }
