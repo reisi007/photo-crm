@@ -1,0 +1,10 @@
+<div class="flex flex-col w-full h-full">
+    <div class="flex w-full justify-evenly gap-x-2 text-xl underline underline-offset-4 bg-primary text-onPrimary p-4">
+      <a class="black" [routerLink]="['/companies']">Firmen</a>
+      <a class="black" [routerLink]="['/customers']">Kunden</a>
+      <a class="black" [routerLink]="['/orders']">Bestellungen & Rechnungen</a>
+    </div>
+  <div class="w-full h-full grow">
+    <ng-content></ng-content>
+  </div>
+</div>

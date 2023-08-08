@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AbstractRestClient} from './AbstractRestClient';
+import {AbstractRestClient} from './abstract-client';
 import {HttpClient} from '@angular/common/http';
 import {Company, UpdateCompany} from './types';
 
