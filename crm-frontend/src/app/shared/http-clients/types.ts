@@ -6,6 +6,47 @@
  * @template K - The keys of the properties to be partially applied.
  */
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
+
+/**
+ * Represents a utility type for excluding specified properties from a given type.
+ *
+ * @template T - The type from which properties will be excluded.
+ * @template U - The type containing the properties to be excluded.
+ */
+type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
+/**
+ * Represents a type that is exclusive OR (XOR) of two types.
+ *
+ * @template T - The first type.
+ * @template U - The second type.
+ * @typedef XOR<T, U>
+ * @type {object} - The resulting XOR type.
+ * @property {T | U} [T] - The value of type T or U.
+ * @property {T} [Without<U, T>] - The value of type T without U.
+ * @property {U} [Without<T, U>] - The value of type U without T.
+ *
+ * @example
+ *
+ * // USING XOR
+ *
+ * type A = { propA: string };
+ * type B = { propB: number };
+ *
+ * const value1: XOR<A, B> = { propA: "hello" }; // valid, as it only contains type A properties
+ * const value2: XOR<A, B> = { propB: 123 }; // valid, as it only contains type B properties
+ *
+ * const value3: XOR<A, B> = { propA: "hello", propB: 123 }; // invalid, cannot contain both type A and type B properties
+ *
+ * // USING XOR WITH UNION OF NON-OBJECT TYPES
+ *
+ * type C = number;
+ * type D = string;
+ *
+ * const value4: XOR<C, D> = 123; // valid, as it is of type C (number)
+ * const value5: XOR<C, D> = "hello"; // valid, as it is of type D (string)
+ * const value6: XOR<C, D> = true; // invalid, as it does not match either type C or type D
+ */
+export type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;
 /**
  * The JavaBigDecimal class provides a way to perform accurate arithmetic operations on large decimal numbers
  * with arbitrary precision.
@@ -14,19 +55,35 @@ type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
  */
 type JavaBigDecimal = string
 
+export type Id<T>={id:T}
+
+/**
+ * Represents an error object with the specified status code, status description,
+ * and optional error message.
+ *
+ * @typedef {Object} ErrorResponse
+ * @property {number} statusCode - The status code of the error.
+ * @property {string} statusDescription - The status description of the error.
+ * @property {string} [errorMessage] - The optional error message.
+ */
+export type ErrorResponse = {
+  statusCode: number,
+  statusDescription: string,
+  errorMessage?: string
+}
+
 /**
  * Represents an address.
  * @typedef {Object} Address
  * @property {string} id - The unique identifier for the address.
  * @property {string} street - The street name of the address.
- * @property {string} plz - The postal code of the address.
+ * @property {number} plz - The postal code of the address.
  * @property {string} city - The city of the address.
  * @property {string} country - The country of the address.
  */
-export type Address = {
-  id: string,
+export type Address = Id<string> & {
   street: string,
-  plz: string,
+  plz: number,
   city: string,
   country: string
 }
@@ -50,8 +107,7 @@ export type UpdateAddress = PartialBy<Address, 'id'>
  *
  * @template IAddress - The type of address for the company.
  */
-export type Company<IAddress = Address> = {
-  id: string,
+export type Company<IAddress = Address> = Id<string> &  {
   name: string,
   address: IAddress,
   lifetimeValue: JavaBigDecimal
@@ -71,8 +127,7 @@ export type UpdateCompany = Omit<PartialBy<Company<UpdateAddress>, 'id'>, 'lifet
  *
  * @template Item - The item type in the order.
  */
-export type Order<Item extends object = OrderItem> = {
-  id: string,
+export type Order<Item extends object = OrderItem> = Id<string> &  {
   status: SerializableOrderStatus,
   items: Array<Item>,
   customerId: string,
@@ -96,8 +151,7 @@ export type UpdateOrder = Omit<PartialBy<Order<UpdateOrderItem>, 'id'>, 'totalPr
  * @property {string} orderId - The unique identifier of the order to which the item belongs.
  * @property {number} totalPrice - The total price of the item (price * quantity).
  */
-export type OrderItem = {
-  id: string,
+export type OrderItem = Id<string> &  {
   name: string,
   price: JavaBigDecimal,
   quantity: number,
@@ -145,8 +199,7 @@ enum SerializableOrderStatus {
  * @property {IAddress} [address] - The address associated with the customer. Optional.
  * @property {ICompany} [company] - The company associated with the customer. Optional.
  */
-export type Customer<IAddress extends object = Address, ICompany extends object = Company> = {
-  id: string,
+export type Customer<IAddress extends object = Address, ICompany extends object = Company> =  Id<string> & {
   name: string,
   birthday: Date,
   phone: string,

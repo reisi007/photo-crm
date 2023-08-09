@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {provideRouter, RouterModule, Routes, withComponentInputBinding} from '@angular/router';
 import {IndexComponent} from './index/index.component';
 
 const routes: Routes = [
@@ -23,6 +23,7 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
+  providers: [provideRouter(routes,withComponentInputBinding())]
 })
 export class AppRoutingModule {
 }
