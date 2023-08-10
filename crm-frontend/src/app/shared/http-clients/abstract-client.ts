@@ -1,5 +1,5 @@
 import {HttpClient} from '@angular/common/http';
-import {ErrorResponse, Id, XOR} from './types';
+import {HttpErrorResponseDetails, Id, RestApiErrorResponse, XOR} from './types';
 import {Observable, Subject, takeUntil} from 'rxjs';
 import {OnDestroyable} from '../OnDestroyable';
 
@@ -14,7 +14,7 @@ import {OnDestroyable} from '../OnDestroyable';
  */
 export abstract class AbstractRestClient<UpdateData extends object, Data extends object> extends OnDestroyable {
 
-  private readonly subject = new Subject<ErrorOrSuccess<Array<Data>, ErrorResponse>>();
+  private readonly subject = new Subject<ErrorOrSuccess<Array<Data>, RestApiErrorResponse>>();
 
   protected readonly restUrl: string;
 
@@ -33,36 +33,38 @@ export abstract class AbstractRestClient<UpdateData extends object, Data extends
   }
 
 
-  getAll(): Observable<ErrorOrSuccess<Array<Data>, ErrorResponse>> {
+  getAll(): Observable<ErrorOrSuccess<Array<Data>, RestApiErrorResponse>> {
     return this.subject.asObservable().pipe(
       takeUntil(this.onDestroy$),
     );
   }
 
   updateSome(updated: Array<UpdateData>) {
-    this.httpClient.put(this.restUrl, updated);
+    const observable = this.httpClient.post<RestApiErrorResponse | null>(this.restUrl, updated);
     this.refresh();
+    return observable;
   }
 
 
   deleteSome(deleted: Array<UpdateData>) {
-    this.httpClient.request('delete', this.restUrl, {body: deleted});
+    const observable = this.httpClient.request<RestApiErrorResponse | null>('delete', this.restUrl, {body: deleted});
     this.refresh();
+    return observable;
   }
 
   updateOne(updated: UpdateData) {
-    this.updateSome([updated]);
+    return this.updateSome([updated]);
   }
 
   deleteOne(deleted: UpdateData) {
-    this.deleteSome([deleted]);
+    return this.deleteSome([deleted]);
   }
 }
 
 export type ErrorOrSuccess<S, E> = XOR<{ success: S }, { error: E }>
 
 
-export function findOneById<ID extends string | number, T extends Id<ID>>(companies: ErrorOrSuccess<Array<T>, ErrorResponse>, idToFind: ID): ErrorOrSuccess<T, ErrorResponse> {
+export function findOneById<ID extends string | number, T extends Id<ID>>(companies: ErrorOrSuccess<Array<T>, RestApiErrorResponse>, idToFind: ID): ErrorOrSuccess<T, HttpErrorResponseDetails> {
   if(companies.error !== undefined) {
     return companies;
   }
@@ -71,6 +73,6 @@ export function findOneById<ID extends string | number, T extends Id<ID>>(compan
     return {success: company};
   }
   else {
-    return {error: {statusCode: 404, statusDescription: 'Not found'}};
+    return {error: {error: {statusCode: 404, statusDescription: 'Not found'}}};
   }
 }

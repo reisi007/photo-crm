@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {ErrorResponse} from '../types';
+import {HttpErrorResponseDetails} from '../types';
 
 @Component({
   selector: 'app-rest-error',
@@ -9,6 +9,6 @@ import {ErrorResponse} from '../types';
 export class RestErrorComponent {
 
   @Input()
-  error?: ErrorResponse;
+  error?: HttpErrorResponseDetails;
 
 }

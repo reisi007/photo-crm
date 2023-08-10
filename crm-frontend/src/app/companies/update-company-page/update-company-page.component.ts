@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {CompanyClientService} from '../../shared/http-clients/company-client.service';
 import {OnDestroyable} from '../../shared/OnDestroyable';
 import {ErrorOrSuccess, findOneById} from '../../shared/http-clients/abstract-client';
-import {ErrorResponse, UpdateCompany} from '../../shared/http-clients/types';
+import {HttpErrorResponseDetails, UpdateCompany} from '../../shared/http-clients/types';
 import {map, take} from 'rxjs';
 
 @Component({
@@ -12,7 +12,7 @@ import {map, take} from 'rxjs';
 })
 export class UpdateCompanyPageComponent extends OnDestroyable implements OnInit {
 
-  company?: ErrorOrSuccess<UpdateCompany, ErrorResponse>;
+  company?: ErrorOrSuccess<UpdateCompany, HttpErrorResponseDetails>;
 
   @Input()
   set id(companyId: string) {

@@ -1,3 +1,5 @@
 <ng-container *ngIf="error">
-    <p>rest-error works! {{error | json}}</p>
+  <p class="text-error">Es ist ein Fehler aufgetreten.... {{error.error.statusCode}} - {{error.error.statusDescription}}
+    <ng-container *ngIf="error.error.errorMessage">: {{error.error.errorMessage}}</ng-container>
+  </p>
 </ng-container>

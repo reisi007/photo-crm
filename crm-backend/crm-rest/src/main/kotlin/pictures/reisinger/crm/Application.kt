@@ -20,6 +20,7 @@ import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.util.KtorDsl
 import io.ktor.util.logging.KtorSimpleLogger
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
@@ -137,9 +138,12 @@ fun Routing.angular() = staticResources("/", "frontend") {
 /**
  * Configures the Content Negotiation feature to use JSON as the default format.
  */
+@OptIn(ExperimentalSerializationApi::class)
 private fun ContentNegotiationConfig.json(prettyPrint: Boolean) {
     json(Json {
         this.prettyPrint = prettyPrint
+        explicitNulls = false
+
     })
 }
 

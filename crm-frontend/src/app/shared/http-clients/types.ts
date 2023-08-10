@@ -1,3 +1,5 @@
+import {HttpErrorResponse} from '@angular/common/http';
+
 /**
  * Represents a utility type that allows creating a new type by partially applying
  * the properties of another type.
@@ -55,7 +57,7 @@ export type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<
  */
 type JavaBigDecimal = string
 
-export type Id<T>={id:T}
+export type Id<T> = { id: T }
 
 /**
  * Represents an error object with the specified status code, status description,
@@ -71,6 +73,20 @@ export type ErrorResponse = {
   statusDescription: string,
   errorMessage?: string
 }
+
+/**
+ * Represents an error response from a REST API.
+ * @interface RestApiErrorResponse
+ * @extends HttpErrorResponse
+ */
+export interface RestApiErrorResponse extends HttpErrorResponse {
+  error: ErrorResponse;
+}
+
+/**
+ * Represents the details of an HTTP error response.
+ */
+export type HttpErrorResponseDetails = { error: ErrorResponse }
 
 /**
  * Represents an address.
@@ -107,7 +123,7 @@ export type UpdateAddress = PartialBy<Address, 'id'>
  *
  * @template IAddress - The type of address for the company.
  */
-export type Company<IAddress = Address> = Id<string> &  {
+export type Company<IAddress = Address> = Id<string> & {
   name: string,
   address: IAddress,
   lifetimeValue: JavaBigDecimal
@@ -120,14 +136,14 @@ export type Company<IAddress = Address> = Id<string> &  {
  * @param {UpdateCompany<TAddress>} companyData - The data for updating the company.
  * @returns {Promise<void>} - A promise that resolves when the company is updated successfully.
  */
-export type UpdateCompany = Omit<PartialBy<Company<UpdateAddress>, 'id'>, 'lifetimeValue'>
+export type UpdateCompany = Omit<PartialBy<Company<UpdateAddress | undefined>, 'id'>, 'lifetimeValue'>
 
 /**
  * Represents an order.
  *
  * @template Item - The item type in the order.
  */
-export type Order<Item extends object = OrderItem> = Id<string> &  {
+export type Order<Item extends object = OrderItem> = Id<string> & {
   status: SerializableOrderStatus,
   items: Array<Item>,
   customerId: string,
@@ -151,7 +167,7 @@ export type UpdateOrder = Omit<PartialBy<Order<UpdateOrderItem>, 'id'>, 'totalPr
  * @property {string} orderId - The unique identifier of the order to which the item belongs.
  * @property {number} totalPrice - The total price of the item (price * quantity).
  */
-export type OrderItem = Id<string> &  {
+export type OrderItem = Id<string> & {
   name: string,
   price: JavaBigDecimal,
   quantity: number,
@@ -199,7 +215,7 @@ enum SerializableOrderStatus {
  * @property {IAddress} [address] - The address associated with the customer. Optional.
  * @property {ICompany} [company] - The company associated with the customer. Optional.
  */
-export type Customer<IAddress extends object = Address, ICompany extends object = Company> =  Id<string> & {
+export type Customer<IAddress extends object = Address, ICompany extends object = Company> = Id<string> & {
   name: string,
   birthday: Date,
   phone: string,
@@ -214,3 +230,30 @@ export type Customer<IAddress extends object = Address, ICompany extends object 
  * @extends {PartialBy<Customer<UpdateAddress, UpdateCompany>, 'id'>}
  */
 export type UpdateCustomer = PartialBy<Customer<UpdateAddress, UpdateCompany>, 'id'>
+
+
+/**
+ * Checks if an object has content or is empty.
+ *
+ * @template T - Generic type of the updated object.
+ * @param {T} updated - The object to check for content.
+ * @returns {T | undefined} - Returns the updated object if it has content, otherwise returns undefined.
+ */
+export function objectOrUndefined<T extends object>(updated: T | undefined): T | undefined {
+  if(updated === undefined) {
+    return undefined;
+  }
+  const hasContent = Object.values(updated).filter(v => {
+    if(v === undefined || v === null) {
+      return false;
+    }
+    if(typeof v === 'string') {
+      return v.trim().length > 0;
+    }
+    return true;
+  }).length > 0;
+  if(!hasContent) {
+    return undefined;
+  }
+  return updated;
+}

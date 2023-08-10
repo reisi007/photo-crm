@@ -27,7 +27,9 @@ inline fun <reified Entity : UUIDEntity, reified Table : UUIDEntityClass<Entity>
     crossinline moreRoutes: Route.() -> Unit = {}
 ) = route(subpath) {
     get {
-        call.respondOr404<List<Dao>>(table.all().map { it.toDao() })
+        call.respondOr404(transaction {
+            table.all().map { it.toDao() }
+        })
     }
     post { persistMultiple(toEntity) }
     put { persistMultiple(toEntity) }
@@ -38,7 +40,7 @@ inline fun <reified Entity : UUIDEntity, reified Table : UUIDEntityClass<Entity>
 
     get("{id}") {
         val id: UUID = call.getIdFromParameters()
-        call.respondOr404<Dao>(transaction {
+        call.respondOr404(transaction {
             table.findById(id)?.toDao()
         })
     }

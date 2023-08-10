@@ -11,10 +11,12 @@ const routes: Routes = [
   {
     path: 'customers',
     loadChildren: () => import('./customers/customers.module').then(m => m.CustomersModule),
-  }, {
+  },
+  {
     path: 'companies',
     loadChildren: () => import('./companies/companies.module').then(m => m.CompaniesModule),
-  }, {
+  },
+  {
     path: 'orders',
     loadChildren: () => import('./orders/orders.module').then(m => m.OrdersModule),
   },
@@ -23,7 +25,7 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [provideRouter(routes,withComponentInputBinding())]
+  providers: [provideRouter(routes, withComponentInputBinding())],
 })
 export class AppRoutingModule {
 }
