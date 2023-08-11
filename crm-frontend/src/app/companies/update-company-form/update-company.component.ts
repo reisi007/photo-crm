@@ -75,7 +75,7 @@ export class UpdateCompanyComponent implements OnInit {
     }
     const updated = value as UpdateCompany;
     updated.address = objectOrUndefined<UpdateAddress>(updated.address);
-    console.log('Update one', updated);
+
     this.companyRestClient.updateOne(updated).subscribe({
       error: error => this.lastError = error,
       next: async () => {

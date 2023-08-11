@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Start Dev" type="JetRunConfigurationType">
+  <configuration default="false" name="Start DEV" type="JetRunConfigurationType">
     <option name="MAIN_CLASS_NAME" value="pictures.reisinger.crm.ApplicationKt" />
     <module name="crm-rest" />
     <shortenClasspath name="NONE" />
@@ -7,5 +7,10 @@
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
+  </configuration>
+  <configuration default="false" name="Start DEV" type="Multirun" separateTabs="false" reuseTabsWithFailures="true" startOneByOne="false" markFailedProcess="true" hideSuccessProcess="false" delayTime="0.0">
+    <runConfiguration name="Start DEV" type="Kotlin" />
+    <runConfiguration name="Angular DEV" type="npm" />
+    <method v="2" />
   </configuration>
 </component>

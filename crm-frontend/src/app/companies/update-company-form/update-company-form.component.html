@@ -9,30 +9,30 @@
 
   <div formGroupName="address" class="space-y-4">
     <div class="flex flex-col">
-      <label for="street" class="mb-2 font-bold text-lg">Straße</label>
+      <label for="street" class="mb-2 font-bold text-lg">Straße  <app-required></app-required></label>
       <input type="text" id="street" formControlName="street">
     </div>
 
     <div class="flex w-full space-x-4">
       <div class="flex flex-col basis-1 grow">
-        <label for="plz" class="mb-2 font-bold text-lg">Plz</label>
+        <label for="plz" class="mb-2 font-bold text-lg">Plz  <app-required></app-required></label>
         <input type="text" id="plz" formControlName="plz">
       </div>
 
       <div class="flex flex-col basis-1 grow">
-        <label for="city" class="mb-2 font-bold text-lg">Stadt</label>
+        <label for="city" class="mb-2 font-bold text-lg">Stadt  <app-required></app-required></label>
         <input type="text" id="city" formControlName="city">
       </div>
 
       <div class="flex flex-col basis-1 grow">
-        <label for="country" class="mb-2 font-bold text-lg">Land</label>
+        <label for="country" class="mb-2 font-bold text-lg">Land  <app-required></app-required></label>
         <input type="text" id="country" formControlName="country">
       </div>
     </div>
   </div>
 
   <button [disabled]="!updateCompanyForm.valid" type="submit" (click)="onSubmit(updateCompanyForm.value)"
-          class="mt-4 px-6 py-2 bg-primary-alternative text-onPrimary font-bold rounded-lg">Firma anlegen
+          class="primary">Firma {{data?"speichern":"anlegen"}}
   </button>
   <app-rest-error [error]="lastError"></app-rest-error>
 </form>
