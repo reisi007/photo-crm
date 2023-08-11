@@ -143,7 +143,7 @@ private fun ContentNegotiationConfig.json(prettyPrint: Boolean) {
     json(Json {
         this.prettyPrint = prettyPrint
         explicitNulls = false
-
+        ignoreUnknownKeys = true
     })
 }
 

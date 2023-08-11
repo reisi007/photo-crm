@@ -5,7 +5,10 @@ import {CreateCustomerPageComponent} from './create-customer-page/create-custome
 import {UpdateCustomerPageComponent} from './update-customer-page/update-customer-page.component';
 
 const routes: Routes = [
-  {path: '', component: CustomersComponent}, {
+  {
+    path: '',
+    component: CustomersComponent,
+  }, {
     path: 'create',
     component: CreateCustomerPageComponent,
   },

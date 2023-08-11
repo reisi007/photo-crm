@@ -1,1 +1,23 @@
-<p>customers works!</p>
+<p class="flex justify-center">
+  <a class="button primary black" routerLink="./create">Neu anlegen</a>
+</p>
+
+<app-rest-error [error]="response?.error"></app-rest-error>
+<ng-container *ngIf="response?.success">
+  <table class="w-full">
+    <thead>
+    <tr>
+      <th>Kunde</th>
+      <th>Bearbeiten</th>
+      <th>Aufträge</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let cur of response?.success">
+      <td>{{cur.name}} - {{cur.email}}</td>
+      <td><a class="button primary black" [routerLink]="'./'+cur.id">Bearbeiten</a></td>
+      <td><a class="button primary black" [routerLink]="'./'+cur.id+'/orders'">Ansehen</a></td>
+    </tr>
+    </tbody>
+  </table>
+</ng-container>

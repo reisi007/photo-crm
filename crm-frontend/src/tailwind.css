@@ -57,7 +57,7 @@
 }
 
 @layer components {
-  input, textarea {
+  input, textarea,select {
     @apply p-2 border accent-primary-accent border-gray-200 rounded-lg
   }
 
@@ -75,7 +75,7 @@
   }
 
   option {
-    @apply text-black
+    @apply text-black p-2
   }
 
 }
@@ -105,5 +105,21 @@
 
   .container {
     @apply w-full mx-auto sm:w-[540px] md:w-[720px] lg:w-[960px] xl:w-[1140px] 2xl:w-[86vw];
+  }
+
+  .form-control {
+    @apply flex flex-col basis-1 grow
+  }
+
+  .form-label {
+    @apply mb-2 font-bold text-lg
+  }
+
+  .form-control-group {
+    @apply flex w-full space-x-4
+  }
+
+  [formGroupName] {
+    @apply space-y-4
   }
 }

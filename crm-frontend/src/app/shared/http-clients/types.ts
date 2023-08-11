@@ -243,6 +243,7 @@ export function objectOrUndefined<T extends object>(updated: T | undefined): T |
   if(updated === undefined) {
     return undefined;
   }
+
   const hasContent = Object.values(updated).filter(v => {
     if(v === undefined || v === null) {
       return false;
@@ -256,4 +257,13 @@ export function objectOrUndefined<T extends object>(updated: T | undefined): T |
     return undefined;
   }
   return updated;
+}
+
+export function trimToUndefined(original?: string) {
+  if(original?.trim()?.length ?? 0) {
+    return original;
+  }
+  else {
+    return undefined;
+  }
 }

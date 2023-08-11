@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {OnDestroyable} from '../../shared/OnDestroyable';
 import {ErrorOrSuccess, findOneById} from '../../shared/http-clients/abstract-client';
-import {HttpErrorResponseDetails, UpdateCompany, UpdateCustomer} from '../../shared/http-clients/types';
+import {HttpErrorResponseDetails, UpdateCustomer} from '../../shared/http-clients/types';
 import {map, take} from 'rxjs';
 import {CustomerClientService} from '../../shared/http-clients/customer-client.service';
 

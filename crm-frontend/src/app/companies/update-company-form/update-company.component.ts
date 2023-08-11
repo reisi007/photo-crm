@@ -42,6 +42,7 @@ export class UpdateCompanyComponent implements OnInit {
     const data = this.data;
     this.updateCompanyForm = this.formBuilder.group<UpdateCompanyFormControls>(
       {
+        id: this.formBuilder.control<string | undefined>(data?.id),
         name: this.formBuilder.control<string>(data?.name ?? '', {
           validators: [Validators.required, Validators.minLength(1)],
         }),
@@ -61,6 +62,7 @@ export class UpdateCompanyComponent implements OnInit {
       error: error => this.lastError = error,
       next: async () => {
         this.lastError = undefined;
+        this.companyRestClient.refresh();
         await this.router.navigate(['../'], {relativeTo: this.route});
       },
     });
@@ -70,6 +72,7 @@ export class UpdateCompanyComponent implements OnInit {
 }
 
 type UpdateCompanyFormControls = {
+  id: FormControl<string | undefined>,
   name: FormControl<string>,
   address: FormGroup<UpdateAddressFormControls>
 }

@@ -1,31 +1,30 @@
 <form [formGroup]="updateCompanyForm" class="space-y-4 mx-8 my-4">
-  <div class="flex flex-col">
-    <label for="name" class="mb-2 font-bold text-lg">Name
+  <div class="form-control">
+    <label for="name" class="form-label">Name
       <app-required></app-required>
     </label>
-    <input type="text" id="name" formControlName="name" required
-           class="px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+    <input type="text" id="name" formControlName="name" required           >
   </div>
 
-  <div formGroupName="address" class="space-y-4">
-    <div class="flex flex-col">
-      <label for="street" class="mb-2 font-bold text-lg">Straße  <app-required></app-required></label>
+  <div formGroupName="address">
+    <div class="form-control">
+      <label for="street" class="form-label">Straße  <app-required></app-required></label>
       <input type="text" id="street" formControlName="street">
     </div>
 
-    <div class="flex w-full space-x-4">
-      <div class="flex flex-col basis-1 grow">
-        <label for="plz" class="mb-2 font-bold text-lg">Plz  <app-required></app-required></label>
+    <div class="form-control-group">
+      <div class="form-control">
+        <label for="plz" class="form-label">Plz  <app-required></app-required></label>
         <input type="text" id="plz" formControlName="plz">
       </div>
 
-      <div class="flex flex-col basis-1 grow">
-        <label for="city" class="mb-2 font-bold text-lg">Stadt  <app-required></app-required></label>
+      <div class="form-control">
+        <label for="city" class="form-label">Stadt  <app-required></app-required></label>
         <input type="text" id="city" formControlName="city">
       </div>
 
-      <div class="flex flex-col basis-1 grow">
-        <label for="country" class="mb-2 font-bold text-lg">Land  <app-required></app-required></label>
+      <div class="form-control">
+        <label for="country" class="form-label">Land  <app-required></app-required></label>
         <input type="text" id="country" formControlName="country">
       </div>
     </div>
