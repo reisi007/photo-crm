@@ -32,7 +32,7 @@ class Order(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<Order>(OrderTable)
 
     var status by OrderTable.status
-    val items by OrderItem referrersOn    OrderItemTable.order
+    val items by OrderItem referrersOn OrderItemTable.order
     var customer by Customer referencedOn OrderTable.customer
 
     val totalPrice: BigDecimal
@@ -49,5 +49,9 @@ class Order(id: EntityID<UUID>) : UUIDEntity(id) {
 }
 
 fun SqlExpressionBuilder.orderPredicate(orderId: UUID?, customerId: UUID?): Op<Boolean> {
-    return OrderTable.id.eq(orderId) and OrderTable.customer.eq(customerId)
+    return OrderTable.id.eq(orderId) and onlyFromCustomer(customerId)
+}
+
+fun SqlExpressionBuilder.onlyFromCustomer(customerId: UUID?): Op<Boolean> {
+    return OrderTable.customer.eq(customerId)
 }

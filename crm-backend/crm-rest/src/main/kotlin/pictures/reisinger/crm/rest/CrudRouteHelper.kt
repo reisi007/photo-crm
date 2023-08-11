@@ -24,50 +24,60 @@ inline fun <reified Entity : UUIDEntity, reified Table : UUIDEntityClass<Entity>
     table: Table,
     crossinline toDao: Entity.() -> Dao,
     crossinline toEntity: UpdateDao.() -> Entity,
+    crossinline findAll: Table .(ApplicationCall) -> Iterable<Entity> = { all() },
+    crossinline ensureUpdateDaoFitsPath: UpdateDao.(ApplicationCall) -> Unit = {},
     crossinline moreRoutes: Route.() -> Unit = {}
-) = route(subpath) {
-    get {
-        call.respondOr404(transaction {
-            table.all().map { it.toDao() }
-        })
-    }
-    post { persistMultiple(toEntity) }
-    put { persistMultiple(toEntity) }
-    delete {
-        val body = call.receive<Array<UpdateDao>>()
-        transaction { body.forEach { it.toEntity().delete() } }
-    }
+): Route {
+    return route(subpath) {
+        get {
+            call.respondOr404(transaction {
+                table.findAll(call).map { it.toDao() }
+            })
+        }
+        post { persistMultiple(toEntity) { ensureUpdateDaoFitsPath(call) } }
+        put { persistMultiple(toEntity) { ensureUpdateDaoFitsPath(call) } }
+        delete {
+            val body = call.receive<Array<UpdateDao>>()
+            transaction { body.forEach { it.toEntity().delete() } }
+        }
 
-    get("{id}") {
-        val id: UUID = call.getIdFromParameters()
-        call.respondOr404(transaction {
-            table.findById(id)?.toDao()
-        })
-    }
-    put("{id}") { persistOne(toEntity) }
-    post("{id}") { persistOne(toEntity) }
+        get("{id}") {
+            val id: UUID = call.getIdFromParameters()
+            call.respondOr404(transaction {
+                table.findById(id)?.toDao()
+            })
+        }
+        put("{id}") { persistOne(toEntity) { ensureUpdateDaoFitsPath(call) } }
+        post("{id}") { persistOne(toEntity) { ensureUpdateDaoFitsPath(call) } }
 
-    delete("{id}") {
-        val id = call.getIdFromParameters()
-        val body = call.receive<UpdateDao>().apply { this.id = id }
-        transaction { body.toEntity().delete() }
-        call.respond(HttpStatusCode.NoContent)
-    }
+        delete("{id}") {
+            val id = call.getIdFromParameters()
+            val body = call.receive<UpdateDao>()
+            body.id = id
+            body.ensureUpdateDaoFitsPath(call)
+            transaction { body.toEntity().delete() }
+            call.respond(HttpStatusCode.NoContent)
+        }
 
-    moreRoutes()
+        moreRoutes()
+    }
 }
 
 suspend inline fun <reified Entity : UUIDEntity, reified UpdateDao : Id<UUID?>> PipelineContext<Unit, ApplicationCall>.persistOne(
-    crossinline toEntity: UpdateDao.() -> Entity
+    crossinline toEntity: UpdateDao.() -> Entity,
+    ensureUpdateDaoFitsPath: UpdateDao.() -> Unit
 ) {
     val id = call.getIdFromParameters()
-    val body = call.receive<UpdateDao>().apply { this.id = id }
+    val body = call.receive<UpdateDao>()
+    body.id = id
+    body.ensureUpdateDaoFitsPath()
     transaction { body.toEntity() }
     call.respond(HttpStatusCode.NoContent)
 }
 
 suspend inline fun <reified Entity : UUIDEntity, reified UpdateDao : Id<UUID?>> PipelineContext<Unit, ApplicationCall>.persistMultiple(
-    crossinline toEntity: UpdateDao.() -> Entity
+    crossinline toEntity: UpdateDao.() -> Entity,
+    ensureUpdateDaoFitsPath: UpdateDao.() -> Unit
 ) {
     val body = call.receive<Array<UpdateDao>>()
     transaction {
@@ -76,7 +86,7 @@ suspend inline fun <reified Entity : UUIDEntity, reified UpdateDao : Id<UUID?>> 
     call.respond(HttpStatusCode.NoContent)
 }
 
-fun ApplicationCall.getIdFromParameters() = parameters.getOrFail<UUID>("id")
+fun ApplicationCall.getIdFromParameters(param: String = "id") = parameters.getOrFail<UUID>(param)
 
 suspend inline fun <reified T> ApplicationCall.respondOr404(message: T?) {
     if (message == null)

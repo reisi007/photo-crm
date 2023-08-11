@@ -17,14 +17,13 @@ class OrderItemTest {
     @Test
     fun calculateValueOfOrder() = crmTest {
         val (customer, order) = sampleCustomerWithOrder()
+        val url = ordersUrl(customer.id)
 
         postJson(CUSTOMER_URL, listOf(customer)).isNoContent()
-        postJson(ORDERS_URL, listOf(order)).isNoContent()
+        postJson(url, listOf(order)).isNoContent()
 
-        getJson<OrderDao>("${ORDERS_URL}/${order.id}").isSuccessContent {
-            getData().all {
-                assertOrderDao(order)
-            }
+        getJson<OrderDao>("$url/${order.id}").isSuccessContent {
+            getData().all { assertOrderDao(order) }
         }
     }
 }
@@ -44,7 +43,7 @@ private fun Assert<OrderDao>.assertOrderDao(expected: OrderDao) = all {
 private fun Assert<Pair<OrderItemDao, OrderItemDao>>.assertOrderItemDao() = all {
     propPair(OrderItemDao::id).areEqual()
     propPair(OrderItemDao::name).areEqual()
-    propPair(OrderItemDao::price).areBigDecimalsEqual()
+    propPair(OrderItemDao::price).areEqualComparingTo()
     propPair(OrderItemDao::quantity).areEqual()
     propPair(OrderItemDao::orderId).areEqual()
 }

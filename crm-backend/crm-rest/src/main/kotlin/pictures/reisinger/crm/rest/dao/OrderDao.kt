@@ -13,8 +13,8 @@ data class OrderDao(
     override var id: UUIDAsString?,
     var status: SerializableOrderStatus,
     var items: List<OrderItemDao>,
-    val customerId: UUIDAsString,
-    val totalPrice: BigDecimalAsString
+    var customerId: UUIDAsString,
+    var totalPrice: BigDecimalAsString
 ) : Id<UUIDAsString?>
 
 @Serializable

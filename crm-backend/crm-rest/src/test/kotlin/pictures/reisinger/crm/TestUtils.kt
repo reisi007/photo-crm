@@ -20,7 +20,6 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.testing.testApplication
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Database
-import java.math.BigDecimal
 import java.sql.DriverManager
 import java.util.*
 import kotlin.reflect.KProperty1
@@ -124,7 +123,7 @@ fun <T> Assert<Pair<T, T>>.areEqual() = given { (expected, actual) ->
     fail(expected, actual)
 }
 
-fun Assert<Pair<BigDecimal, BigDecimal>>.areBigDecimalsEqual() = given { (expected, actual) ->
+fun <T : Comparable<T>> Assert<Pair<T, T>>.areEqualComparingTo() = given { (expected, actual) ->
     if (actual.compareTo(expected) == 0) return
     fail(expected, actual)
 }
