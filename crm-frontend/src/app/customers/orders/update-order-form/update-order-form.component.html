@@ -1,1 +1,51 @@
-<p>update-order-form works!</p>
+<form [formGroup]="updateOrderForm" class="space-y-4 mx-8 my-4">
+  <div formArrayName="items" *ngFor="let item of itemForms.controls; let i=index">
+    <div [formGroupName]="i" class="form-control-group">
+      <div class="form-control basis-2">
+        <label for="name" class="form-label">Name
+          <app-required></app-required>
+        </label>
+        <input type="text" id="name" formControlName="name" required>
+      </div>
+
+      <div class="form-control">
+        <label for="price" class="form-label">Preis
+          <app-required></app-required>
+        </label>
+        <input type="number" id="price" min="1" formControlName="price" required>
+      </div>
+
+      <div class="form-control">
+        <label for="quantity" class="form-label">Anzahl
+          <app-required></app-required>
+        </label>
+        <input type="number" min="1" id="quantity" formControlName="quantity" required>
+      </div>
+      <div class="inline-flex items-end pb-2 mx-4 text-xl">{{total(i)}}€</div>
+      <div class="inline-flex items-end">
+        <button class="bg-red-500 text-white" (click)="deleteOrderItem(i)">Entfernen</button>
+      </div>
+    </div>
+  </div>
+  <div class="flex justify-center">
+    <button class="primary min-w-2/3" (click)="addOrderItem()">Zeile hinzufügen</button>
+  </div>
+
+  <div class="form-control">
+    <label for="status" class="form-label">Status</label>
+    <select id="status" formControlName="status">
+      <option *ngFor="let status of orderStatus" [ngValue]="status">
+        {{ status }}
+      </option>
+    </select>
+  </div>
+
+  <div class="text-xl">
+    Total: {{total()}}€
+  </div>
+
+  <button [disabled]="!updateOrderForm.valid" type="submit" (click)="onSubmit(updateOrderForm.value)"
+          class="primary">Order   {{data ? "aktualisieren" : "anlegen"}}
+  </button>
+  <app-rest-error [error]="lastError"></app-rest-error>
+</form>

@@ -1,1 +1,2 @@
-<p>update-order-page works!</p>
+<app-update-order-form *ngIf="order?.success" [data]="order?.success"></app-update-order-form>
+<app-rest-error [error]="order?.error"></app-rest-error>

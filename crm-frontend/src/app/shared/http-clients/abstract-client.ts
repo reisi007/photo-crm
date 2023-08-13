@@ -14,17 +14,34 @@ import {OnDestroyable} from '../OnDestroyable';
  */
 export abstract class AbstractRestClient<UpdateData extends object, Data extends object> extends OnDestroyable {
 
-  private readonly subject = new Subject<ErrorOrSuccess<Array<Data>, RestApiErrorResponse>>();
+  private subject!: Subject<ErrorOrSuccess<Array<Data>, RestApiErrorResponse>>;
 
-  protected readonly restUrl: string;
+  private internalRestUrl!: string;
 
-  protected constructor(restUrl: string, protected httpClient: HttpClient) {
+  protected get restUrl() {
+    return this.internalRestUrl;
+  }
+
+  constructor(protected httpClient: HttpClient, restUrl: string | null = null) {
     super();
-    this.restUrl = '/rest/' + restUrl;
+    if(restUrl !== null) {
+      this.setRestUrl(restUrl);
+    }
+  }
+
+  setRestUrl(restUrlFragment: string) {
+    this.internalRestUrl = '/rest/' + restUrlFragment;
+    const oldSubject = this.subject;
+
+    this.subject = new Subject<ErrorOrSuccess<Array<Data>, RestApiErrorResponse>>();
+
+    if(oldSubject !== undefined) {
+      oldSubject.complete();
+    }
   }
 
   refresh() {
-    this.httpClient.get<Array<Data>>(this.restUrl).subscribe(
+    this.httpClient.get<Array<Data>>(this.internalRestUrl).subscribe(
       {
         next: success => this.subject.next({success}),
         error: error => this.subject.next({error}),
@@ -40,14 +57,14 @@ export abstract class AbstractRestClient<UpdateData extends object, Data extends
   }
 
   updateSome(updated: Array<UpdateData>) {
-    const observable = this.httpClient.post<RestApiErrorResponse | null>(this.restUrl, updated);
+    const observable = this.httpClient.post<RestApiErrorResponse | null>(this.internalRestUrl, updated);
     this.refresh();
     return observable;
   }
 
 
   deleteSome(deleted: Array<UpdateData>) {
-    const observable = this.httpClient.request<RestApiErrorResponse | null>('delete', this.restUrl, {body: deleted});
+    const observable = this.httpClient.request<RestApiErrorResponse | null>('delete', this.internalRestUrl, {body: deleted});
     this.refresh();
     return observable;
   }

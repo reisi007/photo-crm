@@ -10,6 +10,6 @@ export class CustomerClientService extends AbstractRestClient<UpdateCustomer,Cus
 
 
   constructor(httpClient: HttpClient) {
-    super("customers",httpClient);
+    super(httpClient, 'customers');
   }
 }

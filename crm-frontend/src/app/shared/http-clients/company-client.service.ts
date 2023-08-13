@@ -9,6 +9,6 @@ import {Company, UpdateCompany} from './types';
 export class CompanyClientService extends AbstractRestClient<UpdateCompany, Company> {
 
   constructor(httpClient: HttpClient) {
-    super('companies', httpClient);
+    super(httpClient, 'companies');
   }
 }

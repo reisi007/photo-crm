@@ -55,7 +55,7 @@ export type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<
  *
  * @class
  */
-type JavaBigDecimal = string
+export type JavaBigDecimal = string
 
 export type Id<T> = { id: T }
 
@@ -192,7 +192,7 @@ export type  UpdateOrderItem = Omit<PartialBy<OrderItem, 'id' | 'orderId'>, 'tot
  *
  * @enum {string}
  */
-enum SerializableOrderStatus {
+export enum SerializableOrderStatus {
   PENDING = 'PENDING',
   ACCEPTED = 'ACCEPTED',
   DECLINED = 'DECLINED',
