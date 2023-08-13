@@ -18,17 +18,33 @@ data class OrderDao(
 ) : Id<UUIDAsString?>
 
 @Serializable
+data class OrderUpdateDao(
+    override var id: UUIDAsString?,
+    var status: SerializableOrderStatus,
+    var items: List<OrderUpdateItemDao>,
+    var customerId: UUIDAsString?,
+) : Id<UUIDAsString?>
+
+@Serializable
 data class OrderItemDao(
     override var id: UUIDAsString?,
     var name: String,
     var price: BigDecimalAsString,
     var quantity: Int,
-    val orderId: UUIDAsString
+    val orderId: UUIDAsString?
 ) : Id<UUIDAsString?> {
 
     val totalPrice
         get() = price * quantity.toBigDecimal()
 }
+
+@Serializable
+data class OrderUpdateItemDao(
+    override var id: UUIDAsString?,
+    var name: String,
+    var price: BigDecimalAsString,
+    var quantity: Int
+) : Id<UUIDAsString?>
 
 @Serializable
 enum class SerializableOrderStatus {
@@ -64,14 +80,6 @@ fun OrderItem.toDao(order: Order) = OrderItemDao(
     order.id.value
 )
 
-fun OrderItemDao.toEntity(order: Order) =
-    OrderItem.insertOrUpdate(id, selectExpression = { orderItemPredicate(id, order.id.value) }) {
-        it.name = name
-        it.price = price
-        it.quantity = quantity
-        it.order = order
-    }
-
 fun Order.toDao() = OrderDao(
     id.value,
     status.toDao(),
@@ -80,15 +88,15 @@ fun Order.toDao() = OrderDao(
     totalPrice
 )
 
-fun OrderDao.toEntity(): Order {
-    val order = Order.insertOrUpdate(id, selectExpression = { orderPredicate(it, customerId) }) { order ->
+fun OrderUpdateDao.toEntity(uuidFromPath: UUIDAsString): Order {
+    val order = Order.insertOrUpdate(id, selectExpression = { orderPredicate(it, uuidFromPath) }) { order ->
         order.status = status.toEntity()
-        order.customer = Customer[customerId]
+        order.customer = Customer[uuidFromPath]
     }
     items.updateChildren(order.items) {
         OrderItem.insertOrUpdate(
             id,
-            selectExpression = { orderItemPredicate(it, id) }) { item ->
+            selectExpression = { orderItemPredicate(it, order.id.value) }) { item ->
             item.name = name
             item.price = price
             item.quantity = quantity

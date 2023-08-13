@@ -8,7 +8,7 @@ import pictures.reisinger.crm.db.order.Order
 import pictures.reisinger.crm.db.order.onlyFromCustomer
 import pictures.reisinger.crm.rest.dao.*
 
-private const val CUSTOMER_ID = "customerId"
+private const val CUSTOMER_ID = "{customerId}"
 
 fun Route.registerCompanyRoutes() = crudRoutes(
     "companies",
@@ -29,7 +29,7 @@ fun Route.registerOrderRoutes(): Route {
         "customers/{$CUSTOMER_ID}/orders",
         Order,
         Order::toDao,
-        OrderDao::toEntity,
+        OrderUpdateDao::toEnityWithRouteInformation,
         findAll = { call -> find { onlyFromCustomer(call.getCustomerIdFromParameters()) } },
         ensureUpdateDaoFitsPath = { call -> customerId = call.getCustomerIdFromParameters() }
 
@@ -37,3 +37,9 @@ fun Route.registerOrderRoutes(): Route {
 }
 
 private fun ApplicationCall.getCustomerIdFromParameters() = getIdFromParameters(CUSTOMER_ID)
+
+
+private fun OrderUpdateDao.toEnityWithRouteInformation(call: ApplicationCall): Order {
+    val customerId = call.getCustomerIdFromParameters()
+    return toEntity(customerId)
+}

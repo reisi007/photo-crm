@@ -3,7 +3,7 @@ import {CompanyClientService} from '../../shared/http-clients/company-client.ser
 import {OnDestroyable} from '../../shared/OnDestroyable';
 import {ErrorOrSuccess, findOneById} from '../../shared/http-clients/abstract-client';
 import {HttpErrorResponseDetails, UpdateCompany} from '../../shared/http-clients/types';
-import {map, take} from 'rxjs';
+import {map} from 'rxjs';
 
 @Component({
   selector: 'app-update-company-page',
@@ -18,7 +18,6 @@ export class UpdateCompanyPageComponent extends OnDestroyable implements OnInit 
   set id(companyId: string) {
     this.client.getAll()
         .pipe(
-          take(1),
           map(v => findOneById(v, companyId)),
         ).subscribe({next: (data) => this.company = data});
   }

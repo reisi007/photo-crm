@@ -14,34 +14,18 @@ import {OnDestroyable} from '../OnDestroyable';
  */
 export abstract class AbstractRestClient<UpdateData extends object, Data extends object> extends OnDestroyable {
 
-  private subject!: Subject<ErrorOrSuccess<Array<Data>, RestApiErrorResponse>>;
+  private subject: Subject<ErrorOrSuccess<Array<Data>, RestApiErrorResponse>> = new Subject();
 
-  private internalRestUrl!: string;
+  readonly restUrl!: string;
 
-  protected get restUrl() {
-    return this.internalRestUrl;
-  }
 
-  constructor(protected httpClient: HttpClient, restUrl: string | null = null) {
+  constructor(protected httpClient: HttpClient, restUrl: string) {
     super();
-    if(restUrl !== null) {
-      this.setRestUrl(restUrl);
-    }
-  }
-
-  setRestUrl(restUrlFragment: string) {
-    this.internalRestUrl = '/rest/' + restUrlFragment;
-    const oldSubject = this.subject;
-
-    this.subject = new Subject<ErrorOrSuccess<Array<Data>, RestApiErrorResponse>>();
-
-    if(oldSubject !== undefined) {
-      oldSubject.complete();
-    }
+    this.restUrl = '/rest/' + restUrl;
   }
 
   refresh() {
-    this.httpClient.get<Array<Data>>(this.internalRestUrl).subscribe(
+    this.httpClient.get<Array<Data>>(this.restUrl).subscribe(
       {
         next: success => this.subject.next({success}),
         error: error => this.subject.next({error}),
@@ -57,16 +41,12 @@ export abstract class AbstractRestClient<UpdateData extends object, Data extends
   }
 
   updateSome(updated: Array<UpdateData>) {
-    const observable = this.httpClient.post<RestApiErrorResponse | null>(this.internalRestUrl, updated);
-    this.refresh();
-    return observable;
+    return this.httpClient.post<RestApiErrorResponse | null>(this.restUrl, updated);
   }
 
 
   deleteSome(deleted: Array<UpdateData>) {
-    const observable = this.httpClient.request<RestApiErrorResponse | null>('delete', this.internalRestUrl, {body: deleted});
-    this.refresh();
-    return observable;
+    return this.httpClient.request<RestApiErrorResponse | null>('delete', this.restUrl, {body: deleted});
   }
 
   updateOne(updated: UpdateData) {

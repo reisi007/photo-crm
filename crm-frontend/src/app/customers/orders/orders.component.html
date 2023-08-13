@@ -1,3 +1,21 @@
 <p class="flex justify-center">
   <a class="button primary black" routerLink="./create">Neu anlegen</a>
 </p>
+
+<app-rest-error [error]="response?.error"></app-rest-error>
+<ng-container *ngIf="response?.success">
+  <table class="w-full">
+    <thead>
+    <tr>
+      <th>Bestellung</th>
+      <th>Bearbeiten</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let cur of response?.success">
+      <td>{{cur.totalPrice}}€ - {{cur.status}}</td>
+      <td><a class="button primary black" [routerLink]="'./'+cur.id">Bearbeiten</a></td>
+    </tr>
+    </tbody>
+  </table>
+</ng-container>

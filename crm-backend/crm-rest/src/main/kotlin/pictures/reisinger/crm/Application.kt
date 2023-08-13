@@ -36,7 +36,7 @@ internal val DEV_LOGGER = KtorSimpleLogger("DevOutput")
 
 fun Application.module() {
     Database.connect(
-        "jdbc:sqlite:file:data/${if (environment.developmentMode) "dev" else "prod"}.sqlite?cache=shared",
+        "jdbc:sqlite:file:data/${if (environment.developmentMode) "dev" else "prod"}.sqlite",
         driver = "org.sqlite.JDBC"
     )
     internalModule()

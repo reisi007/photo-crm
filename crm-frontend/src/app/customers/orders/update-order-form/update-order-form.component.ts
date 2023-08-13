@@ -10,18 +10,21 @@ import {
 } from '@angular/forms';
 import {OnDestroyable} from '../../../shared/OnDestroyable';
 import {
-  HttpErrorResponseDetails, JavaBigDecimal,
+  HttpErrorResponseDetails,
+  JavaBigDecimal,
   SerializableOrderStatus,
   UpdateOrder,
   UpdateOrderItem,
 } from '../../../shared/http-clients/types';
 import {OrderClientService} from '../../../shared/http-clients/order-client.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {OrderClientProvider} from '../OrderClientProvider';
 
 @Component({
   selector: 'app-update-order-form',
   templateUrl: './update-order-form.component.html',
   styleUrls: ['./update-order-form.component.css'],
+  providers: [OrderClientProvider],
 })
 export class UpdateOrderFormComponent extends OnDestroyable implements OnInit {
   updateOrderForm!: FormGroup<UpdateOrderFormControls>;
@@ -29,6 +32,9 @@ export class UpdateOrderFormComponent extends OnDestroyable implements OnInit {
 
   @Input()
   data?: UpdateOrder;
+
+  @Input('customerId')
+  customerId!: string;
 
   constructor(
     private formBuilder: NonNullableFormBuilder,
@@ -39,8 +45,14 @@ export class UpdateOrderFormComponent extends OnDestroyable implements OnInit {
     super();
   }
 
+  /**
+   * Calculates the total sum of the items in the update order form.
+   *
+   * @param {number} [idx] - Optional parameter to filter items by index.
+   * @returns {number} - The total sum of the items' quantities multiplied by their prices.
+   */
   total(idx?: number) {
-    const items= this.updateOrderForm.value.items as Array<UpdateOrderItem>;
+    const items = this.updateOrderForm.value.items as Array<UpdateOrderItem>;
     if(items === undefined) {
       return 0;
     }
@@ -61,6 +73,7 @@ export class UpdateOrderFormComponent extends OnDestroyable implements OnInit {
 
     this.updateOrderForm = this.formBuilder.group<UpdateOrderFormControls>({
       id: this.formBuilder.control<string | undefined>(data?.id),
+      customerId: this.formBuilder.control<string | undefined>(data?.customerId ?? this.customerId),
       status: this.formBuilder.control<SerializableOrderStatus>(data?.status ?? SerializableOrderStatus.PENDING, Validators.required),
       items: this.formBuilder.array(items),
     });
@@ -75,7 +88,7 @@ export class UpdateOrderFormComponent extends OnDestroyable implements OnInit {
     return this.formBuilder.group<UpdateOrderItemFormControls>({
       id: this.formBuilder.control<string | undefined>(data?.id),
       name: this.formBuilder.control(data?.name, Validators.required),
-      price: this.formBuilder.control(data?.price ?? '10', [Validators.required, Validators.pattern(/\d+/)]),
+      price: this.formBuilder.control(data?.price ?? '10', [Validators.required, Validators.pattern(/-?\d+(\.\d+)?/)]),
       quantity: this.formBuilder.control(data?.quantity ?? 1, [Validators.required, Validators.min(1)]),
     });
   }
@@ -93,7 +106,7 @@ export class UpdateOrderFormComponent extends OnDestroyable implements OnInit {
   }
 
   public onSubmit(value: ɵTypedOrUntyped<UpdateOrderFormControls, ɵFormGroupValue<UpdateOrderFormControls>, any>) {
-    const order = value as UpdateOrder
+    const order = value as UpdateOrder;
 
     this.orderClient.updateOne(order).subscribe({
       error: error => this.lastError = error,
@@ -112,18 +125,18 @@ export class UpdateOrderFormComponent extends OnDestroyable implements OnInit {
     SerializableOrderStatus.PAYMENT_PENDING,
     SerializableOrderStatus.COMPLETED,
   ];
-  protected readonly Object = Object;
 }
 
 type UpdateOrderFormControls = {
   id: FormControl<string | undefined>,
+  customerId: FormControl<string | undefined>,
   status: FormControl<SerializableOrderStatus>,
   items: FormArray<FormGroup<UpdateOrderItemFormControls>>
 }
 
 type UpdateOrderItemFormControls = {
   id: FormControl<string | undefined>,
-  name  : FormControl<string | undefined>,
-  price  : FormControl<JavaBigDecimal | "">,
-  quantity  : FormControl<number>,
+  name: FormControl<string | undefined>,
+  price: FormControl<JavaBigDecimal | ''>,
+  quantity: FormControl<number>,
 }

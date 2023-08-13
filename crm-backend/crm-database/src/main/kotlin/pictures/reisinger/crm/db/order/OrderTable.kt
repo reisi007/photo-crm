@@ -46,6 +46,8 @@ class Order(id: EntityID<UUID>) : UUIDEntity(id) {
                 .mapNotNull { it[totalPrice] }
                 .sumOf { it }
         }
+
+
 }
 
 fun SqlExpressionBuilder.orderPredicate(orderId: UUID?, customerId: UUID?): Op<Boolean> {

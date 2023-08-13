@@ -2,6 +2,7 @@ package pictures.reisinger.crm.rest.dao
 
 import io.ks3.java.math.BigDecimalAsString
 import io.ks3.java.`typealias`.LocalDateAsString
+import io.ktor.server.application.ApplicationCall
 import kotlinx.serialization.Serializable
 import pictures.reisinger.crm.db.company.Company
 import pictures.reisinger.crm.db.customer.Customer
@@ -49,12 +50,13 @@ fun Customer.toDao(): CustomerDao {
     )
 }
 
-fun CustomerUpdateDao.toEntity() = Customer.insertOrUpdate(id, selectExpression = { customerPredicate(it) }) {
-    it.name = name
-    it.birthday = birthday
-    it.phone = phone
-    it.email = email
-    it.address = address?.toEntity(it.id.value)
-    it.company = company?.id?.let { companyId -> Company[companyId] }
-}
+fun CustomerUpdateDao.toEntity(call: ApplicationCall) =
+    Customer.insertOrUpdate(id, selectExpression = { customerPredicate(it) }) {
+        it.name = name
+        it.birthday = birthday
+        it.phone = phone
+        it.email = email
+        it.address = address?.toEntity(it.id.value)
+        it.company = company?.id?.let { companyId -> Company[companyId] }
+    }
 

@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {OnDestroyable} from '../../shared/OnDestroyable';
 import {ErrorOrSuccess, findOneById} from '../../shared/http-clients/abstract-client';
 import {HttpErrorResponseDetails, UpdateCustomer} from '../../shared/http-clients/types';
-import {map, take} from 'rxjs';
+import {map} from 'rxjs';
 import {CustomerClientService} from '../../shared/http-clients/customer-client.service';
 
 @Component({
@@ -17,7 +17,6 @@ export class UpdateCustomerPageComponent extends OnDestroyable implements OnInit
   set id(customerId: string) {
     this.client.getAll()
         .pipe(
-          take(1),
           map(v => findOneById(v, customerId)),
         ).subscribe({next: (data) => this.customer = data});
   }

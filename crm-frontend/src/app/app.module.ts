@@ -6,7 +6,7 @@ import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToolbarComponent} from './toolbar/toolbar.component';
 import {IndexComponent} from './index/index.component';
-import {NgHttpCachingConfig, NgHttpCachingModule} from 'ng-http-caching';
+import {NgHttpCachingConfig} from 'ng-http-caching';
 import {SharedModule} from './shared/shared.module';
 import {HttpClientModule} from '@angular/common/http';
 
@@ -26,7 +26,6 @@ const ngHttpCachingConfig: NgHttpCachingConfig = {
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    NgHttpCachingModule.forRoot(ngHttpCachingConfig),
   ],
   providers: [],
   bootstrap: [AppComponent],

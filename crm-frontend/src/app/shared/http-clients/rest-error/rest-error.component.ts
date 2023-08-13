@@ -9,6 +9,6 @@ import {HttpErrorResponseDetails} from '../types';
 export class RestErrorComponent {
 
   @Input()
-  error?: HttpErrorResponseDetails;
+  error?: HttpErrorResponseDetails | null;
 
 }
