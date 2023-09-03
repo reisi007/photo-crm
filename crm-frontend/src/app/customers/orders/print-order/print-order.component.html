@@ -6,7 +6,8 @@
     </div>
     <div *ngIf="customer?.address">
       {{customer?.name}}<br/>
-      <app-print-address [address]="customer?.address!"></app-print-address>
+      <ng-container *ngIf="customer?.company">{{customer?.company?.name}}<br/></ng-container>
+      <app-print-address [address]="customer?.company?.address ?? customer?.address!"></app-print-address>
     </div>
   </div>
   <br/>
@@ -39,4 +40,3 @@
   <div class="grow-[4]"></div>
   <p class="w-full text-center">{{paymentTerms}}</p>
 </div>
-

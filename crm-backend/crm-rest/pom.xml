@@ -88,6 +88,8 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <finalName>photo-crm</finalName>
+                    <outputDirectory>${project.basedir}/../../</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>
