@@ -1,9 +1,9 @@
 <div class="form-control w-full h-full">
-    <nav class="flex w-full justify-evenly items-center text-center gap-x-2 text-xl underline underline-offset-4 bg-primary text-onPrimary p-4">
+    <nav class="print:hidden mb-4 flex w-full justify-evenly items-center text-center gap-x-2 text-xl underline underline-offset-4 bg-primary text-onPrimary p-4">
       <a class="black grow basis-1" [routerLink]="['/companies']">Firmen</a>
       <a class="black grow basis-1" [routerLink]="['/customers']">Kunden</a>
     </nav>
-  <div class="w-full h-full grow">
+  <div class="w-full h-full">
     <ng-content></ng-content>
   </div>
 </div>

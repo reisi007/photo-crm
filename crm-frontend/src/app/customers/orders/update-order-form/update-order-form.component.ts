@@ -72,7 +72,7 @@ export class UpdateOrderFormComponent extends OnDestroyable implements OnInit {
     const items = (data?.items ?? [undefined]).map(item => this.createItem(item));
 
     this.updateOrderForm = this.formBuilder.group<UpdateOrderFormControls>({
-      id: this.formBuilder.control<string | undefined>(data?.id),
+      id: this.formBuilder.control<number | undefined>(data?.id),
       customerId: this.formBuilder.control<string | undefined>(data?.customerId ?? this.customerId),
       status: this.formBuilder.control<SerializableOrderStatus>(data?.status ?? SerializableOrderStatus.PENDING, Validators.required),
       items: this.formBuilder.array(items),
@@ -128,7 +128,7 @@ export class UpdateOrderFormComponent extends OnDestroyable implements OnInit {
 }
 
 type UpdateOrderFormControls = {
-  id: FormControl<string | undefined>,
+  id: FormControl<number | undefined>,
   customerId: FormControl<string | undefined>,
   status: FormControl<SerializableOrderStatus>,
   items: FormArray<FormGroup<UpdateOrderItemFormControls>>

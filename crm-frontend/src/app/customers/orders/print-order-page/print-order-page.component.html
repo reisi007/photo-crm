@@ -1,0 +1,6 @@
+<div class="h-full py-4">
+  <app-print-order *ngIf="order?.success && customer?.success" [order]="order?.success"
+                   [customer]="customer?.success"></app-print-order>
+  <app-rest-error [error]="order?.error"></app-rest-error>
+  <app-rest-error [error]="customer?.error"></app-rest-error>
+</div>

@@ -1,8 +1,11 @@
 package pictures.reisinger.crm.db.order
 
+import org.jetbrains.exposed.dao.LongEntity
+import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.*
 import pictures.reisinger.crm.db.customer.Customer
@@ -10,7 +13,7 @@ import pictures.reisinger.crm.db.customer.CustomerTable
 import java.math.BigDecimal
 import java.util.*
 
-internal object OrderTable : UUIDTable() {
+internal object OrderTable : LongIdTable() {
     val status = customEnumeration(
         "status",
         "TEXT",
@@ -28,8 +31,8 @@ enum class OrderStatus {
     COMPLETED
 }
 
-class Order(id: EntityID<UUID>) : UUIDEntity(id) {
-    companion object : UUIDEntityClass<Order>(OrderTable)
+class Order(id: EntityID<Long>) : LongEntity(id) {
+    companion object : LongEntityClass<Order>(OrderTable)
 
     var status by OrderTable.status
     val items by OrderItem referrersOn OrderItemTable.order
@@ -50,7 +53,7 @@ class Order(id: EntityID<UUID>) : UUIDEntity(id) {
 
 }
 
-fun SqlExpressionBuilder.orderPredicate(orderId: UUID?, customerId: UUID?): Op<Boolean> {
+fun SqlExpressionBuilder.orderPredicate(orderId: Long?, customerId: UUID?): Op<Boolean> {
     return OrderTable.id.eq(orderId) and onlyFromCustomer(customerId)
 }
 

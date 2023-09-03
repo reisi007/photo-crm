@@ -9,12 +9,14 @@
     <tr>
       <th>Bestellung</th>
       <th>Bearbeiten</th>
+      <th>Drucken</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let cur of response?.success">
       <td>{{cur.totalPrice}}€ - {{cur.status}}</td>
       <td><a class="button primary black" [routerLink]="'./'+cur.id">Bearbeiten</a></td>
+      <td><a class="button primary black" [routerLink]="'./'+cur.id+'/print'">Drucken</a></td>
     </tr>
     </tbody>
   </table>

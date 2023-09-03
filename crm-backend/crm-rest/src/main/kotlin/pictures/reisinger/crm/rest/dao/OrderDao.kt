@@ -10,20 +10,20 @@ import pictures.reisinger.crm.rest.Id
 
 @Serializable
 data class OrderDao(
-    override var id: UUIDAsString?,
+    override var id: Long?,
     var status: SerializableOrderStatus,
     var items: List<OrderItemDao>,
     var customerId: UUIDAsString,
     var totalPrice: BigDecimalAsString
-) : Id<UUIDAsString?>
+) : Id<Long?>
 
 @Serializable
 data class OrderUpdateDao(
-    override var id: UUIDAsString?,
+    override var id: Long?,
     var status: SerializableOrderStatus,
     var items: List<OrderUpdateItemDao>,
     var customerId: UUIDAsString?,
-) : Id<UUIDAsString?>
+) : Id<Long?>
 
 @Serializable
 data class OrderItemDao(
@@ -31,7 +31,7 @@ data class OrderItemDao(
     var name: String,
     var price: BigDecimalAsString,
     var quantity: Int,
-    val orderId: UUIDAsString?
+    val orderId: Long?
 ) : Id<UUIDAsString?> {
 
     val totalPrice

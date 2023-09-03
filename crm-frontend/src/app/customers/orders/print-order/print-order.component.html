@@ -1,0 +1,42 @@
+<div class="flex flex-col h-full">
+  <div class="flex w-full justify-between">
+    <div>
+      {{me.name}}<br/>
+      <app-print-address [address]="me.address"></app-print-address>
+    </div>
+    <div *ngIf="customer?.address">
+      {{customer?.name}}<br/>
+      <app-print-address [address]="customer?.address!"></app-print-address>
+    </div>
+  </div>
+  <br/>
+  <p>Rechnungsnummer: {{order?.id}}</p>
+  <p>Status: {{order?.status}}</p>
+  <div class="grow"></div>
+  <h1 class="mb-2">Rechnung für ein Fotoshooting</h1>
+  <table>
+    <thead>
+    <tr>
+      <th>Position</th>
+      <th>Preis</th>
+      <th>Anzahl</th>
+      <th>Gesamtpreis</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of order?.items">
+      <td>{{item.name}}</td>
+      <td>{{item.price}}€</td>
+      <td>{{item.quantity}}</td>
+      <td>{{parseInt(item.price) * item.quantity}}€</td>
+    </tr>
+    <tr class="border-2 border-black">
+      <td class="text-left border-r-0" colspan="3">Summe</td>
+      <td class="border-l-0 font-semibold">{{order?.totalPrice}}€</td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="grow-[4]"></div>
+  <p class="w-full text-center">{{paymentTerms}}</p>
+</div>
+

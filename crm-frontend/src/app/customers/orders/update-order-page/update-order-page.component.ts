@@ -17,10 +17,11 @@ export class UpdateOrderPageComponent extends OnDestroyable implements OnInit {
 
   @Input()
   set id(orderId: string) {
+    const parsedOrderId = parseInt(orderId, 10);
     this.client.getAll()
         .pipe(
           filter(e => e.success === undefined || e.success.length > 0),
-          map(v => findOneById(v, orderId)),
+          map(v => findOneById(v, parsedOrderId)),
         ).subscribe({next: (data) => this.order = data});
   }
 

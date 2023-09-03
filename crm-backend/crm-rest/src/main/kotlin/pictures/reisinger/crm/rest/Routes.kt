@@ -7,6 +7,7 @@ import pictures.reisinger.crm.db.customer.Customer
 import pictures.reisinger.crm.db.order.Order
 import pictures.reisinger.crm.db.order.onlyFromCustomer
 import pictures.reisinger.crm.rest.dao.*
+import java.util.*
 
 private const val CUSTOMER_ID = "{customerId}"
 
@@ -36,10 +37,10 @@ fun Route.registerOrderRoutes(): Route {
     )
 }
 
-private fun ApplicationCall.getCustomerIdFromParameters() = getIdFromParameters(CUSTOMER_ID)
+private inline fun <reified T : Any> ApplicationCall.getCustomerIdFromParameters() = getIdFromParameters<T>(CUSTOMER_ID)
 
 
 private fun OrderUpdateDao.toEnityWithRouteInformation(call: ApplicationCall): Order {
-    val customerId = call.getCustomerIdFromParameters()
+    val customerId: UUID = call.getCustomerIdFromParameters()
     return toEntity(customerId)
 }

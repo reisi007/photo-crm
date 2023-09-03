@@ -143,7 +143,7 @@ export type UpdateCompany = Omit<PartialBy<Company<UpdateAddress | undefined>, '
  *
  * @template Item - The item type in the order.
  */
-export type Order<Item extends object = OrderItem> = Id<string> & {
+export type Order<Item extends object = OrderItem> = Id<number> & {
   status: SerializableOrderStatus,
   items: Array<Item>,
   customerId: string,
@@ -171,8 +171,7 @@ export type OrderItem = Id<string> & {
   name: string,
   price: JavaBigDecimal,
   quantity: number,
-  orderId: string,
-  totalPrice: number
+  orderId: string
 }
 
 /**

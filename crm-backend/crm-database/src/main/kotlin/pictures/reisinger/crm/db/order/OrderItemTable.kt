@@ -40,6 +40,6 @@ fun totalPriceExpression(): ExpressionAlias<BigDecimal?> = Expression.build {
     OrderItemTable.price * OrderItemTable.quantity.castTo(DecimalColumnType(10, 2))
 }.sum().alias("totalPrice")
 
-fun SqlExpressionBuilder.orderItemPredicate(orderItemId: UUID?, orderId: UUID?): Op<Boolean> {
+fun SqlExpressionBuilder.orderItemPredicate(orderItemId: UUID?, orderId: Long?): Op<Boolean> {
     return OrderItemTable.id.eq(orderItemId) and OrderItemTable.order.eq(orderId)
 }
