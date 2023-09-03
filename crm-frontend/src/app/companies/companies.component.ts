@@ -19,7 +19,6 @@ export class CompaniesComponent extends OnDestroyable implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger;
     this.restClient.getAll()
         .pipe(takeUntil(this.onDestroy$))
         .subscribe({next: value => this.response = value});

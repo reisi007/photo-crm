@@ -20,6 +20,10 @@ import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.util.KtorDsl
 import io.ktor.util.logging.KtorSimpleLogger
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -31,6 +35,10 @@ import pictures.reisinger.crm.rest.dao.trimToNull
 import pictures.reisinger.crm.rest.registerCompanyRoutes
 import pictures.reisinger.crm.rest.registerCustomerRoutes
 import pictures.reisinger.crm.rest.registerOrderRoutes
+import java.awt.Desktop
+import java.net.URI
+import kotlin.io.path.Path
+import kotlin.io.path.createDirectories
 
 internal val DEV_LOGGER = KtorSimpleLogger("DevOutput")
 
@@ -148,6 +156,7 @@ private fun ContentNegotiationConfig.json(prettyPrint: Boolean) {
 }
 
 fun main() {
+    Path("./data").createDirectories()
     val applicationEngineEnvironment = applicationEngineEnvironment {
         connector {
             port = 8080
@@ -157,7 +166,19 @@ fun main() {
             module()
         }
     }
-    embeddedServer(Netty, applicationEngineEnvironment)
-        .start(wait = true)
+    runBlocking {
+        launch(Dispatchers.IO) {
+            delay(500)
+            if (
+                !applicationEngineEnvironment.developmentMode
+                && Desktop.isDesktopSupported()
+                && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)
+            ) {
+                Desktop.getDesktop().browse(URI("http://localhost:8080"));
+            }
+        }
+        embeddedServer(Netty, applicationEngineEnvironment)
+            .start(wait = true)
+    }
 }
 

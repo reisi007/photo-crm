@@ -33,7 +33,7 @@ export class UpdateOrderFormComponent extends OnDestroyable implements OnInit {
   @Input()
   data?: UpdateOrder;
 
-  @Input('customerId')
+  @Input()
   customerId!: string;
 
   constructor(
@@ -58,7 +58,7 @@ export class UpdateOrderFormComponent extends OnDestroyable implements OnInit {
     }
     const filteredItems = idx === undefined ? items : items.filter((_, itemIdx) => idx === itemIdx);
 
-    let sum: number = 0;
+    let sum = 0;
 
     filteredItems.forEach(item => {
       sum += item.quantity * parseInt(item.price, 10);
@@ -105,7 +105,7 @@ export class UpdateOrderFormComponent extends OnDestroyable implements OnInit {
     }
   }
 
-  public onSubmit(value: ɵTypedOrUntyped<UpdateOrderFormControls, ɵFormGroupValue<UpdateOrderFormControls>, any>) {
+  public onSubmit(value: ɵTypedOrUntyped<UpdateOrderFormControls, ɵFormGroupValue<UpdateOrderFormControls>, UpdateOrderFormControls>) {
     const order = value as UpdateOrder;
 
     this.orderClient.updateOne(order).subscribe({

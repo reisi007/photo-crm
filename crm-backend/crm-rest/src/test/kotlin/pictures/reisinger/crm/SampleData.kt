@@ -32,7 +32,7 @@ fun sampleCustomerWithOrder(): Pair<CustomerUpdateDao, OrderDao> {
     )
 
 
-    val orderId = UUID.fromString("7b72421b-530f-45da-8364-c319df98664a")
+    val orderId = 254L
     val orderItems = listOf(
         OrderItemDao(
             id = UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479"),
