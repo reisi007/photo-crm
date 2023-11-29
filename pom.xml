@@ -18,7 +18,7 @@
         <sqlite.version>3.42.0.0</sqlite.version>
         <assertk.version>0.26.1</assertk.version>
         <ks3.version>0.3.1</ks3.version>
-        <logback.version>1.2.7</logback.version>
+        <logback.version>1.3.12</logback.version>
         <jdk.version>17</jdk.version>
     </properties>
 
